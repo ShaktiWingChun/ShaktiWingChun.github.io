@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shakti Wing Chun | Art Martial & Spiritualité</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --cyan: #00E5FF;
+            --cyan-glow: rgba(0, 229, 255, 0.6);
+            --dark-bg: #030712;
+            --glass: rgba(17, 24, 39, 0.7);
+            --text-main: #F3F4F6;
+            --text-dim: #9CA3AF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Classe pour bloquer le scroll tant que la langue n'est pas choisie */
+        .no-scroll {
+            overflow: hidden;
+        }
+
+        /* --- SÉLECTEUR DE LANGUE INITIAL --- */
+        #lang-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, #0a192f 0%, #030712 100%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .lang-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 50px;
+            border-radius: 24px;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            text-align: center;
+        }
+
+        .btn-select {
+            padding: 15px 40px;
+            border: 1px solid var(--cyan);
+            background: transparent;
+            color: var(--cyan);
+            font-family: 'Orbitron';
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.4s;
+            margin: 10px;
+        }
+
+        .btn-select:hover {
+            background: var(--cyan);
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px var(--cyan-glow);
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 8%; background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(10px);
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo-container { display: flex; align-items: center; gap: 20px; }
+        .logo { font-size: 1.3rem; color: #fff; text-decoration: none; font-weight: 700; font-family: 'Orbitron'; }
+        .logo span { color: var(--cyan); }
+        
+        .fb-nav-link { 
+            color: var(--cyan); 
+            font-size: 1.5rem; 
+            transition: 0.3s; 
+            display: flex; 
+            align-items: center;
+            text-decoration: none;
+        }
+        .fb-nav-link:hover { transform: scale(1.05); filter: drop-shadow(0 0 8px var(--cyan)); }
+        .fb-nav-link:hover .join-text { color: var(--cyan); }
+
+        .join-text {
+            font-size: 0.75rem;
+            margin-right: 8px;
+            font-family: 'Orbitron';
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-main);
+            transition: 0.3s;
+        }
+
+        .nav-links { display: flex; list-style: none; gap: 30px; }
+        .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.8rem; transition: 0.3s; font-weight: 600; text-transform: uppercase; font-family: 'Orbitron'; }
+        .nav-links a:hover { color: var(--cyan); }
+
+        /* --- SECTION HERO (MISE À JOUR AVEC COU PLUS COURT) --- */
+        .hero {
+            height: 100vh;
+            /* Prompt ajusté : "powerful dragon compactly coiled", "short muscular neck" */
+            background: linear-gradient(to bottom, rgba(3, 7, 18, 0.2), var(--dark-bg)), 
+                        url('https://image.pollinations.ai/prompt/A%20powerful%20dragon%20compactly%20coiled%20in%20the%20center%20of%20a%20circular%20stone%20platform,%20short%20muscular%20neck,%20glowing%20cyan%20runes,%20massive%20ocean%20waves%20crashing%20in%20the%20background,%20night%20sky%20with%20a%20bright%20full%20moon,%20cinematic%20lighting,%20teal%20and%20dark%20blue%20tones?width=1600&height=900&nologo=true');
+            background-size: cover; 
+            background-position: center;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center;
+        }
+
+        .hero h1 { 
+            font-family: 'Orbitron'; 
+            font-size: clamp(2rem, 6vw, 4.5rem); 
+            margin-bottom: 15px; 
+            text-shadow: 0 0 25px var(--cyan-glow);
+        }
+        
+        .location-tag { 
+            color: var(--cyan); 
+            font-size: 1.2rem; 
+            margin-bottom: 30px; 
+            font-weight: 600; 
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+        }
+
+        /* --- AUTRES SECTIONS --- */
+        section { padding: 100px 10%; }
+        h2.section-title { font-family: 'Orbitron'; font-size: 2.2rem; margin-bottom: 60px; text-align: center; color: var(--cyan); }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+        .glass-card h3 { font-family: 'Orbitron'; color: var(--cyan); margin-bottom: 15px; }
+
+        /* Polygone */
+        .polygon-container { display: flex; justify-content: center; margin: 40px 0; }
+        svg#nonagon { max-width: 550px; width: 100%; overflow: visible; }
+        .poly-line { stroke: var(--cyan); stroke-width: 1.5; fill: rgba(0, 229, 255, 0.03); }
+        .poly-text { fill: var(--text-dim); font-size: 14px; font-family: 'Orbitron'; font-weight: bold; }
+        .center-text { fill: var(--cyan); font-size: 20px; font-family: 'Orbitron'; text-shadow: 0 0 10px var(--cyan); }
+
+        /* Contact */
+        .contact-container { max-width: 550px; margin: 0 auto; }
+        input, textarea {
+            width: 100%; padding: 15px; background: #0f172a; border: 1px solid #1e293b;
+            color: white; border-radius: 10px; margin-bottom: 15px; outline: none;
+        }
+        .btn-whatsapp {
+            background: #25D366; color: white; width: 100%; padding: 18px;
+            border: none; border-radius: 10px; font-weight: 700; font-family: 'Orbitron';
+            cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+
+        footer { padding: 40px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); color: var(--text-dim); }
+
+        /* --- GESTION LANGUES --- */
+        [lang-content] { display: none; }
+        .visible { display: block !important; }
+        .inline-visible { display: inline !important; }
+    </style>
+</head>
+<body class="no-scroll">
+
+    <!-- OVERLAY CHOIX DE LANGUE -->
+    <div id="lang-overlay">
+        <div class="lang-card">
+            <div class="logo" style="font-size: 2rem; margin-bottom: 20px;">SHAKTI<span>WING CHUN</span></div>
+            <p style="margin-bottom: 30px; letter-spacing: 1px;">CHOISISSEZ VOTRE LANGUE / SELECT YOUR LANGUAGE</p>
+            <div class="lang-btns">
+                <button class="btn-select" onclick="setLanguage('fr')">FRANÇAIS</button>
+                <button class="btn-select" onclick="setLanguage('en')">ENGLISH</button>
+            </div>
+        </div>
+    </div>
+
+    <nav>
+        <div class="logo-container">
+            <a href="#" class="logo">SHAKTI<span>WING CHUN</span></a>
+            <a href="https://www.facebook.com/profile.php?id=61570755326950" target="_blank" class="fb-nav-link" title="Suivez-nous sur Facebook / Follow us">
+                <span class="join-text" lang-content="fr">Rejoignez-nous</span>
+                <span class="join-text" lang-content="en">Join us</span>
+                <i class="fab fa-facebook"></i>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#spiritualite" lang-content="fr">Valeurs</a><a href="#spiritualite" lang-content="en">Values</a></li>
+            <li><a href="#lignage" lang-content="fr">Ma Lignée</a><a href="#lignage" lang-content="en">My Lineage</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#" onclick="showOverlay()" style="color: var(--cyan); font-size: 0.7rem;">[ FR | EN ]</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <h1 lang-content="fr">Maîtrisez l'Art Interne</h1>
+        <h1 lang-content="en">Master the Internal Art</h1>
+        <p class="location-tag">
+            <span lang-content="fr">Cours privés à Charleroi</span>
+            <span lang-content="en">Private lessons in Charleroi</span>
+        </p>
+    </header>
+
+    <section id="spiritualite">
+        <h2 class="section-title" lang-content="fr">Dimension Spirituelle</h2>
+        <h2 class="section-title" lang-content="en">Spiritual Dimension</h2>
+        <p style="text-align:center; font-style:italic; margin-bottom:40px;">
+            <span lang-content="fr">"Chez SWC (Shakti Wing Chun) on enseigne le kung fu comme pratique spirituelle."</span>
+            <span lang-content="en">"At SWC (Shakti Wing Chun) we teach kung fu as a spiritual practice."</span>
+        </p>
+
+        <div class="polygon-container">
+            <svg id="nonagon" viewBox="0 0 600 600">
+                <polygon points="300,80 435,128 505,255 480,400 370,500 230,500 120,400 95,255 165,128" class="poly-line" />
+                <g lang-content="fr">
+                    <text x="300" y="55" text-anchor="middle" class="poly-text">Discipline</text>
+                    <text x="445" y="115" text-anchor="start" class="poly-text">Volonté</text>
+                    <text x="520" y="260" text-anchor="start" class="poly-text">Amour</text>
+                    <text x="495" y="415" text-anchor="start" class="poly-text">Patience</text>
+                    <text x="370" y="540" text-anchor="middle" class="poly-text">Détachement</text>
+                    <text x="230" y="540" text-anchor="middle" class="poly-text">Humilité</text>
+                    <text x="105" y="415" text-anchor="end" class="poly-text">Connaissance</text>
+                    <text x="80" y="260" text-anchor="end" class="poly-text">Pureté</text>
+                    <text x="155" y="115" text-anchor="end" class="poly-text">Concentration</text>
+                    <text x="300" y="295" text-anchor="middle" class="center-text">RÉCEPTIVITÉ</text>
+                </g>
+                <g lang-content="en">
+                    <text x="300" y="55" text-anchor="middle" class="poly-text">Discipline</text>
+                    <text x="445" y="115" text-anchor="start" class="poly-text">Willpower</text>
+                    <text x="520" y="260" text-anchor="start" class="poly-text">Love</text>
+                    <text x="495" y="415" text-anchor="start" class="poly-text">Patience</text>
+                    <text x="370" y="540" text-anchor="middle" class="poly-text">Detachment</text>
+                    <text x="230" y="540" text-anchor="middle" class="poly-text">Humility</text>
+                    <text x="105" y="415" text-anchor="end" class="poly-text">Knowledge</text>
+                    <text x="80" y="260" text-anchor="end" class="poly-text">Purity</text>
+                    <text x="155" y="115" text-anchor="end" class="poly-text">Concentration</text>
+                    <text x="300" y="295" text-anchor="middle" class="center-text">RECEPTIVITY</text>
+                </g>
+            </svg>
+        </div>
+    </section>
+
+    <section id="lignage">
+        <h2 class="section-title" lang-content="fr">Ma Lignée</h2>
+        <h2 class="section-title" lang-content="en">My Lineage</h2>
+        
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:30px;">
+            <div class="glass-card">
+                <h3>Yip Man (Ip Man)</h3>
+                <p lang-content="fr">Grand Maître légendaire qui a popularisé le Wing Chun à Hong Kong dans les années 50. Mentor de Bruce Lee et professeur direct de Chu Shong Tin, il a transmis les fondements de cet art avec une précision inégalée.</p>
+                <p lang-content="en">Legendary Grandmaster who popularized Wing Chun in Hong Kong in the 1950s. Mentor to Bruce Lee and direct teacher of Chu Shong Tin, he passed down the art's foundations with unmatched precision.</p>
+            </div>
+            <div class="glass-card">
+                <h3>Chu Shong Tin (CST)</h3>
+                <p lang-content="fr">Surnommé "Le Roi de la Siu Nim Tao", il a dédié sa vie à l'aspect interne du Wing Chun. Son enseignement privilégie la relaxation profonde, la structure osseuse et la force de l'esprit (Nim Tao) plutôt que la force brute.</p>
+                <p lang-content="en">Known as "The King of Siu Nim Tao," he dedicated his life to the internal aspect of Wing Chun, emphasizing deep relaxation, bone structure, and mind power (Nim Tao) over brute force.</p>
+            </div>
+        </div>
+
+        <div class="glass-card" style="text-align: center; border-color: var(--cyan); margin-top: 40px;">
+            <p lang-content="fr">À <strong>Shakti Wing Chun</strong>, je transmets fidèlement le système issu de la lignée de <strong>Grand Maître Chu Shong Tin</strong>, focalisé sur l'efficacité interne et la structure.</p>
+            <p lang-content="en">At <strong>Shakti Wing Chun</strong>, I faithfully transmit the system from <strong>Grandmaster Chu Shong Tin's</strong> lineage, focused on internal efficiency and structure.</p>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 class="section-title">Contact</h2>
+        <div class="contact-container">
+            <input type="text" id="name" placeholder="Nom / Name">
+            <input type="text" id="phone" placeholder="Téléphone / Phone">
+            <textarea id="msg" rows="4" placeholder="Message..."></textarea>
+            <button class="btn-whatsapp" onclick="sendWA()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Shakti Wing Chun - Charleroi, Belgique</p>
+    </footer>
+
+    <script>
+        const overlay = document.getElementById('lang-overlay');
+        const savedLang = localStorage.getItem('swc_lang');
+
+        document.body.classList.add('no-scroll');
+
+        if (savedLang) {
+            updateUI(savedLang);
+        }
+
+        function setLanguage(lang) {
+            localStorage.setItem('swc_lang', lang);
+            overlay.style.opacity = '0';
+            document.body.classList.remove('no-scroll');
+            setTimeout(() => { 
+                overlay.style.visibility = 'hidden'; 
+            }, 800);
+            updateUI(lang);
+        }
+
+        function updateUI(lang) {
+            document.querySelectorAll('[lang-content]').forEach(el => {
+                if (el.getAttribute('lang-content') === lang) {
+                    el.classList.add('visible');
+                    if (el.tagName === 'SPAN') el.classList.add('inline-visible');
+                } else {
+                    el.classList.remove('visible', 'inline-visible');
+                }
+            });
+        }
+
+        function showOverlay() {
+            overlay.style.visibility = 'visible';
+            overlay.style.opacity = '1';
+            document.body.classList.add('no-scroll');
+        }
+
+        function sendWA() {
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const msg = document.getElementById('msg').value;
+            window.open(`https://wa.me/32456687275?text=*Nom:* ${name}%0A*Tel:* ${phone}%0A*Message:* ${msg}`, '_blank');
+        }
+    </script>
+</body>
+</html>
